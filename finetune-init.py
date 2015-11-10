@@ -22,6 +22,7 @@ params = {
         "train_batch": 32,
         "val_source": "val.poc",
         "val_batch": 10,
+        "val_batches": 19,
         "fc_name": "fc8x",
         "num_output": 20,
         "lr_mult_filter": 10,
