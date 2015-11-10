@@ -26,7 +26,6 @@ params = {
         "num_output": 20,
         "lr_mult_filter": 10,
         "lr_mult_bias": 20,
-        "val_batches": 19,
         "val_interval": 100,
         "snapshot_interval": 200,
         "base_lr": 0.001,
