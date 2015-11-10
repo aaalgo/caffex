@@ -1,0 +1,2 @@
+This model is modified from the public Caffenet model.
+Parameters are trained from the ILSVRC 2012 data by Wei Dong.
