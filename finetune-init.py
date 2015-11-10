@@ -31,7 +31,8 @@ params = {
         "snapshot_interval": 200,
         "base_lr": 0.001,
         "stepsize": 20000,
-        "max_iter": 100000
+        "max_iter": 100000,
+        "device": "GPU"
 }
 
 params_json = json.dumps(params, sort_keys=False, indent=4 * ' ')
