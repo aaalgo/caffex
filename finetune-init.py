@@ -22,16 +22,18 @@ params = {
         "train_batch": 32,
         "val_source": "val.poc",
         "val_batch": 10,
+        "val_batches": 19,
         "fc_name": "fc8x",
         "num_output": 20,
         "lr_mult_filter": 10,
         "lr_mult_bias": 20,
-        "val_batches": 19,
         "val_interval": 100,
         "snapshot_interval": 200,
         "base_lr": 0.001,
         "stepsize": 20000,
-        "max_iter": 100000
+        "max_iter": 100000,
+        "device": "GPU",
+	"data_type": "PicPocData"
 }
 
 params_json = json.dumps(params, sort_keys=False, indent=4 * ' ')
