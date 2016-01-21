@@ -96,7 +96,7 @@ void Caffex::wrapInputLayer (std::vector<cv::Mat>* channels) {
 void Caffex::preprocess(cv::Mat const &img, cv::Mat *channels) {
     if (img.total() == 0) {
         for (int i = 0; i < input_channels; ++i) {
-            channels[i] = 0;
+            channels[i].setTo(cv::Scalar(0));
         }
         return;
     }
