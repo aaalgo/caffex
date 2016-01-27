@@ -20,24 +20,22 @@ input = args.input[0]
 output = args.output[0]
 tmp = args.tmp[0]
 
-if False:
-    if not os.path.isdir(input):
-        logging.error("%s is not directory" % input)
-        sys.exit(1)
-    if os.path.exists(output):
-        logging.error("%s already exists" % output)
-        sys.exit(1)
-    if os.path.exists(tmp):
-        logging.error("%s already exists" % tmp)
-        sys.exit(1)
+if not os.path.isdir(input):
+    logging.error("%s is not directory" % input)
+    sys.exit(1)
+if os.path.exists(output):
+    logging.error("%s already exists" % output)
+    sys.exit(1)
+if os.path.exists(tmp):
+    logging.error("%s already exists" % tmp)
+    sys.exit(1)
 
-    bin_dir = os.path.dirname(__file__)
+bin_dir = os.path.abspath(os.path.dirname(__file__))
 
-    subprocess.check_call("%s %s" % (os.path.join(bin_dir, "finetune-init.py"), tmp), shell=True)
-    subprocess.check_call("load-caffex %s %s -U" % (input, tmp), shell=True)
-    subprocess.check_call("cd %s; %s" % (tmp, os.path.join(bin_dir, "finetune-generate.py")), shell=True)
-    subprocess.check_call("cd %s; ./train.sh 2> train.log" % tmp, shell=True)
-    pass
+subprocess.check_call("%s %s" % (os.path.join(bin_dir, "finetune-init.py"), tmp), shell=True)
+subprocess.check_call("load-caffex %s %s -U" % (input, tmp), shell=True)
+subprocess.check_call("cd %s; %s" % (tmp, os.path.join(bin_dir, "finetune-generate.py")), shell=True)
+subprocess.check_call("cd %s; ./train.sh 2>&1 | tee train.log" % tmp, shell=True)
 
 perf = []
 best_snap = -1
@@ -53,7 +51,6 @@ with open(os.path.join(tmp, "train.log")) as f:
         if not l:
             break
         m = re1.search(l)
-        print m
         if m:
             it = int(m.group(1))
             l = f.readline()
@@ -76,9 +73,9 @@ shutil.copy(os.path.join(tmp, "deploy.prototxt"),
             os.path.join(output, "caffe.model"))
 shutil.copy(os.path.join(tmp, "mean.binaryproto"),
             os.path.join(output, "caffe.mean"))
-shutil.copy(os.path.join(tmp, snapshots, "caffenet_train_iter_%d.caffemodel" % best_snap),
+shutil.copy(os.path.join(tmp, "snapshots", "caffenet_train_iter_%d.caffemodel" % best_snap),
             os.path.join(output, "caffe.params"))
-with open(output, "blobs") as f:
+with open(os.path.join(output, "blobs"), "w") as f:
     f.write("prob\n")
 
 
