@@ -33,7 +33,7 @@ params = {
         "stepsize": 20000,
         "max_iter": 100000,
         "device": "GPU",
-	"data_type": "PicPocData"
+    "data_type": "PicPocData"
 }
 
 params_json = json.dumps(params, sort_keys=False, indent=4 * ' ')
