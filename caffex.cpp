@@ -1,5 +1,7 @@
+#include <iostream>
 #include <fstream>
 #include <algorithm>
+#define CAFFEX_IMPL 1
 #include "caffex.h"
 
 namespace caffex {
@@ -31,8 +33,9 @@ Caffex::Caffex(string const& model_dir, unsigned batch)
 
 
     // set mean file
-    {
-        string mean_file = model_dir + "/caffe.mean";
+    string mean_file = model_dir + "/caffe.mean";
+    std::ifstream test(mean_file.c_str());
+    if (test) {
         BlobProto blob_proto;
         ReadProtoFromBinaryFileOrDie(mean_file.c_str(), &blob_proto);
 
@@ -57,6 +60,11 @@ Caffex::Caffex(string const& model_dir, unsigned batch)
         cv::merge(channels, merged);
         cv::Scalar channel_mean = cv::mean(merged);
         mean = cv::Mat(input_height, input_width, merged.type(), channel_mean);
+    }
+    else {
+        std::cerr << "Failed to load mean file.";
+        mean = cv::Mat(input_height, input_width, CV_32FC3);
+        mean = cv::Scalar(0);
     }
 
     {
@@ -88,7 +96,7 @@ void Caffex::wrapInputLayer (std::vector<cv::Mat>* channels) {
 void Caffex::preprocess(cv::Mat const &img, cv::Mat *channels) {
     if (img.total() == 0) {
         for (int i = 0; i < input_channels; ++i) {
-            channels[i] = 0;
+            channels[i].setTo(cv::Scalar(0));
         }
         return;
     }
