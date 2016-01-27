@@ -36,11 +36,12 @@ subprocess.check_call("%s %s" % (os.path.join(bin_dir, "finetune-init.py"), tmp)
 subprocess.check_call("load-caffex %s %s -U" % (input, tmp), shell=True)
 subprocess.check_call("cd %s; %s" % (tmp, os.path.join(bin_dir, "finetune-generate.py")), shell=True)
 subprocess.check_call("cd %s; ./train.sh 2>&1 | tee train.log" % tmp, shell=True)
+subprocess.check_call("cd %s; grep solver.cpp train.log > solver.log" % tmp, shell=True)
 
 perf = []
 best_snap = -1
 best_acc = 0
-with open(os.path.join(tmp, "train.log")) as f:
+with open(os.path.join(tmp, "solver.log")) as f:
     # look for lines like below
     # I0127 11:24:15.227892 27000 solver.cpp:340] Iteration 552, Testing net (#0)
     # I0127 11:24:15.283869 27000 solver.cpp:408]     Test net output #0: accuracy = 0.975
